@@ -2,7 +2,7 @@
 "manifest_version": 2,
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
-    "version": "1.1",
+    "version": "0.1",
     "content_scripts": [
         {
             "matches": [

@@ -10,6 +10,17 @@ function pad0(num)
     return s;
 }
 
+function insert(main_string, ins_string, pos) 
+{
+   if(typeof(pos) == "undefined") {
+    pos = 0;
+  }
+   if(typeof(ins_string) == "undefined") {
+    ins_string = '';
+  }
+  return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
+}
+    
 function replaceText (node) 
 {
   if (node.nodeType === Node.TEXT_NODE) {
@@ -20,11 +31,9 @@ function replaceText (node)
     }
     
     var text = node.nodeValue;
-    const regex = /\b(\d{1,2})(?::?(\d\d))?\s*([aApP]?[mM])?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/;
-    var found = text.match(regex);
-
-    
-    if (found)
+    var updatedText = text;
+    var regex = /\b(\d{1,2})(?::?(\d\d))?\s*([aApP]?[mM])?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/g;
+    while(found = regex.exec(text))
     {
         var hour = parseInt(found[1]);
         var minute = found[2] ? parseInt(found[2]) : 0;
@@ -86,13 +95,20 @@ function replaceText (node)
                 hour-=24;
             }
             
-            var replacedText = text.replace(
-                found[0], 
-                found[0] + " ("+pad0(hour)+":"+pad0(minute)+" "+localZone+")"
+            // found.index
+            updatedText = insert(
+                updatedText,
+                " ("+pad0(hour)+":"+pad0(minute)+" "+localZone+") ",
+                found.index + found[0].length + (updatedText.length-text.length)
             );
-            node.textContent = replacedText;
+            
+            //updatedText = updatedText.replace(
+            //    found[0], 
+            //    found[0] + " ("+pad0(hour)+":"+pad0(minute)+" "+localZone+")"
+            //);
         }
     }
+    node.textContent = updatedText;
   }
   else {
     // This node contains more than just text, call replaceText() on each

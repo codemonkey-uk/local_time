@@ -65,7 +65,7 @@ function replaceText (node)
         var minute = found[2] ? parseInt(found[2]) : 0;
         
         var ampm = found[3];
-        if (ampm && ampm=="pm")
+        if (ampm && ampm.toUpperCase().charAt()==="P")
             hour += 12;
         
         var zone = found[4];
@@ -141,7 +141,7 @@ function replaceText (node)
 
 
 // Start the recursion from the body tag.
-replaceText(document.body);
+replaceText(document.body,{characterData: true});
 
 // Now monitor the DOM for additions and substitute emoji into new nodes.
 // @see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver.
@@ -154,6 +154,10 @@ const observer = new MutationObserver((mutations) => {
         const newNode = mutation.addedNodes[i];
         replaceText(newNode);
       }
+    }
+    else if (mutation.type==='characterData')
+    {
+       replaceText(target);
     }
   });
 });

@@ -20,7 +20,33 @@ function insert(main_string, ins_string, pos)
   }
   return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
 }
-    
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
+function toLocaleTimeStringSupportsLocales() 
+{
+  try {
+    new Date().toLocaleTimeString('i');
+  } catch (e) {
+    return e.name === 'RangeError';
+  }
+  return false;
+}
+
+function localTime2Text(hour, minute)
+{
+    var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (toLocaleTimeStringSupportsLocales())
+    {
+        const d = new Date();
+        d.setHours(hour,minute,0);
+        return d.toLocaleTimeString(navigator.language, {
+            hour: '2-digit',
+            minute:'2-digit'
+          }) + " " + localZone;
+    }
+    return pad0(hour)+":"+pad0(minute) + " " + localZone;
+}
+
 function replaceText (node) 
 {
   if (node.nodeType === Node.TEXT_NODE) {
@@ -69,7 +95,6 @@ function replaceText (node)
                 }
             }
             
-            var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
             var localOffset = new Date().getTimezoneOffset();
             hour -= Math.floor(localOffset/60);
             minute -= localOffset%60;
@@ -98,14 +123,9 @@ function replaceText (node)
             // found.index
             updatedText = insert(
                 updatedText,
-                " ("+pad0(hour)+":"+pad0(minute)+" "+localZone+") ",
+                " (" + localTime2Text(hour, minute) + ")",
                 found.index + found[0].length + (updatedText.length-text.length)
             );
-            
-            //updatedText = updatedText.replace(
-            //    found[0], 
-            //    found[0] + " ("+pad0(hour)+":"+pad0(minute)+" "+localZone+")"
-            //);
         }
     }
     node.textContent = updatedText;
@@ -142,3 +162,4 @@ observer.observe(document.body, {
   childList: true,
   subtree: true
 });
+</script>

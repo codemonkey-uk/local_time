@@ -1,8 +1,8 @@
 NAME = local_time
-VERSION = 0_2_1
+VERSION = 0_2_2
 BUILD_DIR = release
 BUILD_FILE = $(BUILD_DIR)/$(NAME)_$(VERSION).zip
-FILES = content.js manifest.json LICENSE icon.svg
+FILES = content.js manifest.json LICENSE icon.svg icon.svg icon-128.png
 
 .DEFAULT_GOAL := build
 

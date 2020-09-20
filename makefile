@@ -1,5 +1,5 @@
 NAME = local_time
-VERSION = 0_2
+VERSION = 0_2_1
 BUILD_DIR = release
 BUILD_FILE = $(BUILD_DIR)/$(NAME)_$(VERSION).zip
 FILES = content.js manifest.json LICENSE

@@ -58,7 +58,7 @@ function replaceText (node)
     
     var text = node.nodeValue;
     var updatedText = text;
-    var regex = /\b(\d{1,2})(?:[:\.]?(\d\d))?\s*([aApP]?[mM])?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/g;
+    var regex = /\b(\d{1,2})(?:[:h\.]?(\d\d))?\s*([aApP]?[mM])?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/g;
     while(found = regex.exec(text))
     {
         var hour = parseInt(found[1]);

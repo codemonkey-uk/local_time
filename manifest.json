@@ -3,6 +3,7 @@
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
     "version": "0.2.1",
+    "icons": { "512": "icon.svg" },
     "content_scripts": [
         {
             "matches": [

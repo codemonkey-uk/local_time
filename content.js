@@ -3,6 +3,8 @@ var utc_offsets = {
 };
 const offset_regex = /([+-])(\d{1,2})(?::?(\d\d))?/;
 
+var local_zone_str_enabled = true;
+
 function pad0(num) 
 {
     var s = num+"";
@@ -34,7 +36,7 @@ function toLocaleTimeStringSupportsLocales()
 
 function localTime2Text(hour, minute)
 {
-    var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var localZone = local_zone_str_enabled ? " " + Intl.DateTimeFormat().resolvedOptions().timeZone : "";
     if (toLocaleTimeStringSupportsLocales())
     {
         const d = new Date();
@@ -42,7 +44,7 @@ function localTime2Text(hour, minute)
         return d.toLocaleTimeString(navigator.language, {
             hour: '2-digit',
             minute:'2-digit'
-          }) + " " + localZone;
+          }) + localZone;
     }
     return pad0(hour)+":"+pad0(minute) + " " + localZone;
 }
@@ -139,10 +141,6 @@ function replaceText (node)
   }
 }
 
-
-// Start the recursion from the body tag.
-replaceText(document.body,{characterData: true});
-
 // Now monitor the DOM for additions and substitute emoji into new nodes.
 // @see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver.
 const observer = new MutationObserver((mutations) => {
@@ -162,7 +160,37 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
+function processContent()
+{
+    // Start the recursion from the body tag.
+    replaceText(document.body,{characterData: true});
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    }); 
+}
+    
+function gotOptions(item)
+{
+    local_zone_str_enabled = item.local_zone_str_enabled;
+    processContent();
+}
+
+function optionsError(err)
+{
+    local_zone_str_enabled=true;
+    processContent();
+}
+
+function restoreOptions() 
+{
+    browser.storage.local.get('local_zone_str_enabled')
+        .then(gotOptions,optionsError);
+}
+
+function begin()
+{
+    restoreOptions();
+}
+
+begin();

@@ -1,14 +1,19 @@
 {
-"manifest_version": 2,
+    "manifest_version": 2,
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
-    "version": "0.2.2",
+    "version": "0.3",
     "icons": { 
         "128": "icon-128.png",
         "512": "icon.svg"
     },
+    "options_ui": {
+      "page": "options.html",
+      "browser_style": true,
+      "chrome_style": true
+    },
     "permissions": [
-      "activeTab"
+      "activeTab", "storage"
     ],    
     "content_scripts": [
         {

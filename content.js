@@ -11,8 +11,9 @@ function pad0(num)
     while (s.length < 2) s = "0" + s;
     return s;
 }
-
-function insert(main_string, ins_string, pos) 
+// inserts ins_string into mains_string at pos,
+// IF the string at pos is not already a match
+function insert_if(main_string, ins_string, pos) 
 {
    if(typeof(pos) == "undefined") {
     pos = 0;
@@ -20,7 +21,11 @@ function insert(main_string, ins_string, pos)
    if(typeof(ins_string) == "undefined") {
     ins_string = '';
   }
-  return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
+  // prevent double-insertion
+  if (main_string.slice(pos).startsWith(ins_string)==false)
+      return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
+  else
+    return main_string;
 }
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
@@ -123,7 +128,7 @@ function replaceText (node)
             }
             
             // found.index
-            updatedText = insert(
+            updatedText = insert_if(
                 updatedText,
                 " (" + localTime2Text(hour, minute) + ")",
                 found.index + found[0].length + (updatedText.length-text.length)

@@ -1,25 +1,42 @@
 function saveOptions(e) 
 {
-    document.querySelector("#loaded_msg").innerText = "Saving";
     var v = document.querySelector("#local_zone_str_checkbox").checked;
-    var local_zone_str_enabled = v;
-    browser.storage.local.set({local_zone_str_enabled}).then(savedOption);
+    var tv = document.querySelector('input[name="time_format"]:checked').value
+
+    var settings = {
+        "local_zone_str_enabled": v,
+        "time_format": tv
+    };
+    console.log("Saving Settings: "+JSON.stringify(settings));
+    browser.storage.local.set({settings}).then(savedOption);
 }
 
 function savedOption() 
 {
-    document.querySelector("#loaded_msg").innerText = "Saved";
+    console.log("Settings Saved.");
 }
 
 function gotOptions(item)
 {
-   document.querySelector("#local_zone_str_checkbox").checked = item.local_zone_str_enabled;
-   document.querySelector("#loaded_msg").innerText = "Loaded: "+ item.local_zone_str_enabled;
+    if (item)
+    {
+        var settings = item.settings;
+        if (settings)
+        {
+            console.log("Loaded Setting: "+JSON.stringify(settings));
+            document.querySelector("#local_zone_str_checkbox").checked = settings.local_zone_str_enabled;
+            var node = document.querySelector('#time_format_'+settings.time_format);
+            if (node)
+                node.checked = true;
+            else 
+                console.log("time_format setting not recognised: "+settings.time_format);
+        }
+    }
 }
 
 function onError(error)
 {
-   document.querySelector("#loaded_msg").innerText = "Error loading: "+ error;
+    console.log("Error Loading Setting: "+error);
 }
 
 function restoreOptions() 
@@ -27,10 +44,28 @@ function restoreOptions()
     var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     document.querySelector("#local_zone_str").innerText = localZone;
 
-    browser.storage.local.get('local_zone_str_enabled')
+    var currentdate = new Date();
+    var h = currentdate.getHours();
+    var m = currentdate.getMinutes();
+    document.getElementById("time_format_hhmm24h_example").innerText = hhmm24h(h,m);
+    if (toLocaleTimeStringSupportsLocales()==false)
+    {
+        document.getElementById("time_format_browser").disabled = true;
+        document.getElementById("time_format_browser_example").innerText = "unavailable";
+    }
+    else
+    {
+        document.getElementById("time_format_browser_example").innerText = browserLocalizedTime(h,m);
+    }
+    
+    browser.storage.local.get('settings')
         .then(gotOptions);
-    document.querySelector("#loaded_msg").innerText = "Loading...";
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
 document.querySelector("#local_zone_str_checkbox").addEventListener("change", saveOptions);
+var radios = document.querySelectorAll('input[type=radio][name="time_format"]');
+radios.forEach(radio => radio.addEventListener('change', saveOptions));
+
+
+

@@ -4,13 +4,8 @@ var utc_offsets = {
 const offset_regex = /([+-])(\d{1,2})(?::?(\d\d))?/;
 
 var local_zone_str_enabled = true;
+var time_format = "browser";
 
-function pad0(num) 
-{
-    var s = num+"";
-    while (s.length < 2) s = "0" + s;
-    return s;
-}
 // inserts ins_string into mains_string at pos,
 // IF the string at pos is not already a match
 function insert_if(main_string, ins_string, pos) 
@@ -28,30 +23,14 @@ function insert_if(main_string, ins_string, pos)
     return main_string;
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
-function toLocaleTimeStringSupportsLocales() 
-{
-  try {
-    new Date().toLocaleTimeString('i');
-  } catch (e) {
-    return e.name === 'RangeError';
-  }
-  return false;
-}
-
 function localTime2Text(hour, minute)
 {
     var localZone = local_zone_str_enabled ? " " + Intl.DateTimeFormat().resolvedOptions().timeZone : "";
-    if (toLocaleTimeStringSupportsLocales())
+    if (toLocaleTimeStringSupportsLocales() && time_format=="browser")
     {
-        const d = new Date();
-        d.setHours(hour,minute,0);
-        return d.toLocaleTimeString(navigator.language, {
-            hour: '2-digit',
-            minute:'2-digit'
-          }) + localZone;
+        return browserLocalizedTime(hour, minute) + localZone;
     }
-    return pad0(hour)+":"+pad0(minute) + " " + localZone;
+    return hhmm24h(hour, minute) + localZone;
 }
 
 function replaceText (node) 
@@ -177,7 +156,15 @@ function processContent()
     
 function gotOptions(item)
 {
-    local_zone_str_enabled = item.local_zone_str_enabled;
+    if (item)
+    {
+        var settings = item.settings;
+        if (settings)
+        {
+            local_zone_str_enabled = settings.local_zone_str_enabled;
+            time_format = settings.time_format;
+        }
+    }
     processContent();
 }
 
@@ -189,7 +176,7 @@ function optionsError(err)
 
 function restoreOptions() 
 {
-    browser.storage.local.get('local_zone_str_enabled')
+    browser.storage.local.get('settings')
         .then(gotOptions,optionsError);
 }
 

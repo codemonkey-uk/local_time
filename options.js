@@ -1,7 +1,8 @@
 function saveOptions(e) 
 {
     var v = document.querySelector("#local_zone_str_checkbox").checked;
-    var tv = document.querySelector('input[name="time_format"]:checked').value
+    var r = document.querySelector('input[name="time_format"]:checked');
+    var tv = r ? r.value : "browser";
 
     var settings = {
         "local_zone_str_enabled": v,

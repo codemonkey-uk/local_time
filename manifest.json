@@ -2,14 +2,14 @@
     "manifest_version": 2,
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
-    "version": "0.3",
+    "version": "0.3.1",
     "icons": { 
         "128": "icon-128.png",
         "512": "icon.svg"
     },
     "options_ui": {
       "page": "options.html",
-      "browser_style": true,
+
       "chrome_style": true
     },
     "permissions": [
@@ -21,7 +21,7 @@
                 "*://*/*"
             ],
             "js": [
-                "core.js","content.js"
+                "browser-polyfill.js", "core.js","content.js"
             ],
             "all_frames": true,
             "run_at": "document_idle"

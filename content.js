@@ -3,14 +3,12 @@ var utc_offsets = {
 };
 const offset_regex = /([+-])(\d{1,2})(?::?(\d\d))?/;
 
-function pad0(num) 
-{
-    var s = num+"";
-    while (s.length < 2) s = "0" + s;
-    return s;
-}
+var local_zone_str_enabled = true;
+var time_format = "browser";
 
-function insert(main_string, ins_string, pos) 
+// inserts ins_string into mains_string at pos,
+// IF the string at pos is not already a match
+function insert_if(main_string, ins_string, pos) 
 {
    if(typeof(pos) == "undefined") {
     pos = 0;
@@ -18,33 +16,21 @@ function insert(main_string, ins_string, pos)
    if(typeof(ins_string) == "undefined") {
     ins_string = '';
   }
-  return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
-}
-
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
-function toLocaleTimeStringSupportsLocales() 
-{
-  try {
-    new Date().toLocaleTimeString('i');
-  } catch (e) {
-    return e.name === 'RangeError';
-  }
-  return false;
+  // prevent double-insertion
+  if (main_string.slice(pos).startsWith(ins_string)==false)
+      return main_string.slice(0, pos) + ins_string + main_string.slice(pos);
+  else
+    return main_string;
 }
 
 function localTime2Text(hour, minute)
 {
-    var localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (toLocaleTimeStringSupportsLocales())
+    var localZone = local_zone_str_enabled ? " " + Intl.DateTimeFormat().resolvedOptions().timeZone : "";
+    if (toLocaleTimeStringSupportsLocales() && time_format=="browser")
     {
-        const d = new Date();
-        d.setHours(hour,minute,0);
-        return d.toLocaleTimeString(navigator.language, {
-            hour: '2-digit',
-            minute:'2-digit'
-          }) + " " + localZone;
+        return browserLocalizedTime(hour, minute) + localZone;
     }
-    return pad0(hour)+":"+pad0(minute) + " " + localZone;
+    return hhmm24h(hour, minute) + localZone;
 }
 
 function replaceText (node) 
@@ -121,7 +107,7 @@ function replaceText (node)
             }
             
             // found.index
-            updatedText = insert(
+            updatedText = insert_if(
                 updatedText,
                 " (" + localTime2Text(hour, minute) + ")",
                 found.index + found[0].length + (updatedText.length-text.length)
@@ -138,10 +124,6 @@ function replaceText (node)
     }    
   }
 }
-
-
-// Start the recursion from the body tag.
-replaceText(document.body,{characterData: true});
 
 // Now monitor the DOM for additions and substitute emoji into new nodes.
 // @see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver.
@@ -162,7 +144,45 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
-});
+function processContent()
+{
+    // Start the recursion from the body tag.
+    replaceText(document.body,{characterData: true});
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    }); 
+}
+    
+function gotOptions(item)
+{
+    if (item)
+    {
+        var settings = item.settings;
+        if (settings)
+        {
+            local_zone_str_enabled = settings.local_zone_str_enabled;
+            time_format = settings.time_format;
+        }
+    }
+    processContent();
+}
+
+function optionsError(err)
+{
+    local_zone_str_enabled=true;
+    processContent();
+}
+
+function restoreOptions() 
+{
+    browser.storage.local.get('settings')
+        .then(gotOptions,optionsError);
+}
+
+function begin()
+{
+    restoreOptions();
+}
+
+begin();

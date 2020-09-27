@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+
+<body>
+  <form>
+    <div>
+      <input type="checkbox" id="local_zone_str_checkbox" >
+      <label>Include local time zone name: "<span id="local_zone_str"></span>".</label>
+    </div>
+    <p>Preferred time format: </p>
+    <div>
+    <input type="radio" id="time_format_browser" name="time_format" value="browser"> 
+    <label for="time_format_browser">Use browser settings - <span id="time_format_browser_example"></span></label>
+    </div>
+    <div>
+    <input type="radio" id="time_format_hhmm24h" name="time_format" value="hhmm24h"> 
+    <label for="time_format_hhmm24h">Use HH:MM (24h) - <span id="time_format_hhmm24h_example"></span></label>    
+    </div>
+  </form>
+  <script src="browser-polyfill.js"></script>
+  <script src="core.js"></script>
+  <script src="options.js"></script>
+</body>
+
+</html>

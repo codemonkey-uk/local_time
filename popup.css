@@ -1,0 +1,21 @@
+#local_time_popup 
+{
+    background-color: black;
+    color: #fff;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+#local_time_popup ul 
+{
+    margin-block-start: 0em;
+    margin-block-end: 0.25em;
+    list-style: none;
+    padding: 0px;
+}
+
+#local_time_popup ul li:before
+{
+    content: '\23F0';
+    margin: 0; /* any design */
+}

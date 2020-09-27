@@ -33,28 +33,20 @@ function localTime2Text(hour, minute)
     return hhmm24h(hour, minute) + localZone;
 }
 
-function replaceText (node) 
+function processText (text, fn) 
 {
-  if (node.nodeType === Node.TEXT_NODE) {
-  
-    // Skip textarea nodes 
-    if (node.parentNode && node.parentNode.nodeName === 'TEXTAREA') {
-      return;
-    }
-    
-    var text = node.nodeValue;
-    var updatedText = text;
-    var regex = /\b(\d{1,2})(?:[:h\.]?(\d\d))?\s*([aApP]\.?[mM]\.?)?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/g;
+    var regex = /\b(\d{1,2})(?:[:h\.]?(\d\d))?(?:[:m\.]?(\d\d))?\s*([aApP]\.?[mM]\.?)?\s*([A-Z]{2,5})([+-]\d{1,2}:?\d{0,2})?/g;
     while(found = regex.exec(text))
     {
         var hour = parseInt(found[1]);
         var minute = found[2] ? parseInt(found[2]) : 0;
+        var second = found[3] ? parseInt(found[3]) : 0;
         
-        var ampm = found[3];
+        var ampm = found[4];
         if (ampm && ampm.toUpperCase().charAt()==="P")
             hour += 12;
         
-        var zone = found[4];
+        var zone = found[5];
         if (utc_offsets[zone])
         {
             var zone_offsets = utc_offsets[zone].match(offset_regex);
@@ -67,9 +59,9 @@ function replaceText (node)
             }
             
             // offset on the named time zone
-            if (found[5])
+            if (found[6])
             {
-                var offset = found[5].match(offset_regex);
+                var offset = found[6].match(offset_regex);
                 if (offset)
                 {
                     d = (offset[1]=='-') ? 1 : -1;
@@ -106,14 +98,41 @@ function replaceText (node)
                 hour-=24;
             }
             
-            // found.index
-            updatedText = insert_if(
-                updatedText,
-                " (" + localTime2Text(hour, minute) + ")",
-                found.index + found[0].length + (updatedText.length-text.length)
-            );
+            fn( localTime2Text(hour, minute), found );
         }
     }
+}
+
+function childOfId(node,id)
+{
+    do {
+        if (node.id==id)
+            return true;
+        node = node.parentNode;
+    } while(node);
+    return false;
+}
+
+function replaceText (node) 
+{
+  // dont process own pop up
+  if (childOfId(node,"local_time_popup")) return;
+  
+  if (node.nodeType === Node.TEXT_NODE) {
+  
+    // Skip textarea nodes 
+    if (node.parentNode && node.parentNode.nodeName === 'TEXTAREA') return;
+
+    var text = node.nodeValue;
+    var updatedText = text;
+    processText(text, function (result, found) {
+            updatedText = insert_if(
+                updatedText,
+                " (" + result + ")",
+                found.index + found[0].length + (updatedText.length-text.length)
+            )
+        }
+    );
     node.textContent = updatedText;
   }
   else {
@@ -144,6 +163,48 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 
+function checkSelection(e)
+{
+    var selection = window.getSelection();
+    var selectionTxt = selection.toString();
+    var popupTxt = "";
+    processText(selectionTxt, function (result, found) {
+        if (popupTxt.length == 0)
+            popupTxt += "<ul>";
+        popupTxt += "<li>" +found[0]+ "→" + result;
+    });
+    
+    var id = "local_time_popup";
+    var popup = document.getElementById(id);
+    if (!popup)
+    {
+        var popup = document.createElement("div");
+        popup.id = id;
+        popup.style.position = 'fixed';
+        popup.style.zIndex = 999;//todo: make top
+        document.body.appendChild(popup);
+    }
+    
+    if (popupTxt.length > 0)
+    {
+        popupTxt += "</ul>";
+        popup.innerHTML = popupTxt;
+        var getRange = selection.getRangeAt(0); 
+        var getRect = getRange.getBoundingClientRect();
+        popup.style.top = getRect.bottom+"px";
+        var w = Math.round(getRect.width*0.75);
+        if (w<300) w=300;
+        var l = Math.round(getRect.left + getRect.width*0.125);
+        popup.style.width = w + "px";
+        popup.style.left = l + "px";
+        popup.style.display = 'block';
+    }
+    else
+    {
+        popup.style.display = 'none';
+    }
+}
+
 function processContent()
 {
     // Start the recursion from the body tag.
@@ -151,7 +212,9 @@ function processContent()
     observer.observe(document.body, {
       childList: true,
       subtree: true
-    }); 
+    });
+    
+    window.addEventListener('mouseup', checkSelection );
 }
     
 function gotOptions(item)

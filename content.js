@@ -170,11 +170,11 @@ function checkSelection(e)
 {
     var selection = window.getSelection();
     var selectionTxt = selection.toString();
-    var popupTxt = "";
+    var list = document.createElement("ul");
     processText(selectionTxt, function (result, found) {
-        if (popupTxt.length == 0)
-            popupTxt += "<ul>";
-        popupTxt += "<li>" +found[0]+ "→" + result;
+        var node = document.createElement("li");
+        node.textContent = found[0]+ " → " + result;
+        list.appendChild(node);
     });
     
     var id = "local_time_popup";
@@ -183,15 +183,15 @@ function checkSelection(e)
     {
         var popup = document.createElement("div");
         popup.id = id;
-        popup.style.position = 'fixed';
-        popup.style.zIndex = 999;//todo: make top
+        popup.style.zIndex = 999; // TODO: make top, check pages zIndex range
         document.body.appendChild(popup);
     }
     
-    if (popupTxt.length > 0)
+    if (list.childElementCount > 0)
     {
-        popupTxt += "</ul>";
-        popup.innerHTML = popupTxt;
+        while (popup.hasChildNodes())
+            popup.removeChild(popup.lastChild);
+        popup.appendChild(list);
         var getRange = selection.getRangeAt(0); 
         var getRect = getRange.getBoundingClientRect();
         popup.style.top = getRect.bottom+"px";

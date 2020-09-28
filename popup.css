@@ -4,13 +4,15 @@
     color: #fff;
     padding: 5px;
     border-radius: 6px;
+    margin: auto;
+    position: fixed;
 }
 
 #local_time_popup ul 
 {
-    margin-block-start: 0em;
-    margin-block-end: 0.25em;
     list-style: none;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
     padding: 0px;
 }
 

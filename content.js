@@ -114,7 +114,10 @@ function replaceText (node)
             );
         }
     }
-    node.textContent = updatedText;
+    if (updatedText!=node.textContent)
+    {
+        node.textContent = updatedText;
+    }
   }
   else {
     // This node contains more than just text, call replaceText() on each

@@ -1,11 +1,20 @@
 #local_time_popup 
 {
+    position: fixed;
+    text-align: center;
+}
+
+#local_time_popup div
+{
     background-color: black;
     color: #fff;
     padding: 5px;
     border-radius: 6px;
-    margin: auto;
-    position: fixed;
+    margin-right: auto;
+    margin-left: auto;
+    width: auto;
+    text-align: left;
+    display: inline-block;
 }
 
 #local_time_popup ul 
@@ -14,6 +23,13 @@
     margin-block-start: 0em;
     margin-block-end: 0em;
     padding: 0px;
+    line-height: 1em;
+}
+
+#local_time_popup li {
+    line-height: 1em;
+    margin: 0;
+    padding: 0;
 }
 
 #local_time_popup ul li:before

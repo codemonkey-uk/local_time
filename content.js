@@ -211,7 +211,7 @@ function checkSelection(e)
         var l = Math.round(getRect.left + getRect.width/2 - w/2);
         if (l<0) l=0;
         popup_div.style.width = w + "px";
-        popup_div.style.top = getRect.bottom + "px";
+        popup_div.style.top = (6+getRect.bottom) + "px";
         popup_div.style.left = l + "px";
         popup_div.style.display = 'block';
     }

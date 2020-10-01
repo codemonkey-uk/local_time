@@ -150,7 +150,10 @@ function replaceText (node)
 // Now monitor the DOM for additions and substitute emoji into new nodes.
 // @see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver.
 const observer = new MutationObserver((mutations) => {
+  var updateSelection = false;
   mutations.forEach((mutation) => {
+    if (childOfId(mutation.target,"local_time_popup")==false)
+        updateSelection = true;
     if (mutation.addedNodes && mutation.addedNodes.length > 0) {
       // This DOM change was new nodes being added. Run our substitution
       // algorithm on each newly added node.
@@ -161,9 +164,10 @@ const observer = new MutationObserver((mutations) => {
     }
     else if (mutation.type==='characterData')
     {
-       replaceText(target);
+       replaceText(mutation.target);
     }
   });
+  if (updateSelection) checkSelection();
 });
 
 function checkSelection(e)

@@ -1,0 +1,56 @@
+#local_time_popup 
+{
+    position: fixed;
+    text-align: center;
+}
+
+#local_time_popup div
+{
+    background-color: black;
+    color: #fff;
+    padding: 5px;
+    border-radius: 6px;
+    margin-right: auto;
+    margin-left: auto;
+    width: auto;
+    text-align: left;
+    display: inline-block;
+}
+
+#local_time_popup div:after {
+    bottom: 100%;
+    left: 50%;
+    border: solid transparent;
+    content: "";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-color: rgba(0, 0, 0, 0);
+    border-bottom-color: #000000;
+    border-width: 5px;
+    margin-left: -5px;
+}
+
+#local_time_popup ul 
+{
+    list-style: none;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    padding: 0px;
+    line-height: 1em;
+}
+
+#local_time_popup li {
+    line-height: 1em;
+    font-size: 14px;
+    font-family: Helvetica,Arial,freesans,sans-serif;
+    margin: 2px;
+    padding: 0;
+}
+
+#local_time_popup ul li:before
+{
+    content: '\23F0';
+    margin: 0; /* any design */
+}

@@ -1,3 +1,31 @@
+
+var settings = {
+    "local_zone_str_enabled": true,
+    "time_format": "browser",
+    "feature_annotations": false,
+    "feature_tooltips": true
+};
+
+function gotOptions(loaded)
+{
+    if (loaded)
+    {
+        if (loaded.settings)
+        {
+            console.log("Loaded Setting: "+JSON.stringify(loaded.settings));
+            for (const property in settings) 
+            {
+                if (property in loaded.settings)
+                {
+                    settings[property] = loaded.settings[property];
+                }
+            }
+            console.log("Setting Restored: "+JSON.stringify(settings));
+        }
+    }
+    return settings;
+}
+
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toLocaleTimeString
 function toLocaleTimeStringSupportsLocales() 
 {

@@ -3,8 +3,6 @@ var utc_offsets = {
 };
 const offset_regex = /([+-])(\d{1,2})(?::?(\d\d))?/;
 var popup_div = null;
-var local_zone_str_enabled = true;
-var time_format = "browser";
 
 // inserts ins_string into mains_string at pos,
 // IF the string at pos is not already a match
@@ -25,8 +23,8 @@ function insert_if(main_string, ins_string, pos)
 
 function localTime2Text(hour, minute)
 {
-    var localZone = local_zone_str_enabled ? " " + Intl.DateTimeFormat().resolvedOptions().timeZone : "";
-    if (toLocaleTimeStringSupportsLocales() && time_format=="browser")
+    var localZone = settings.local_zone_str_enabled ? " " + Intl.DateTimeFormat().resolvedOptions().timeZone : "";
+    if (toLocaleTimeStringSupportsLocales() && settings.time_format=="browser")
     {
         return browserLocalizedTime(hour, minute) + localZone;
     }
@@ -154,24 +152,29 @@ const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (childOfId(mutation.target,"local_time_popup")==false)
         updateSelection = true;
-    if (mutation.addedNodes && mutation.addedNodes.length > 0) {
-      // This DOM change was new nodes being added. Run our substitution
-      // algorithm on each newly added node.
-      for (let i = 0; i < mutation.addedNodes.length; i++) {
-        const newNode = mutation.addedNodes[i];
-        replaceText(newNode);
-      }
-    }
-    else if (mutation.type==='characterData')
+    if (settings.feature_annotations)
     {
-       replaceText(mutation.target);
-    }
+        if (mutation.addedNodes && mutation.addedNodes.length > 0) {
+          // This DOM change was new nodes being added. Run our substitution
+          // algorithm on each newly added node.
+          for (let i = 0; i < mutation.addedNodes.length; i++) {
+            const newNode = mutation.addedNodes[i];
+            replaceText(newNode);
+          }
+        }
+        else if (mutation.type==='characterData')
+        {
+           replaceText(mutation.target);
+        }
+    }    
   });
   if (updateSelection) checkSelection();
 });
 
 function checkSelection(e)
 {
+    if (settings.feature_tooltips==false) return;
+    
     var selection = window.getSelection();
     if (selection.isCollapsed)
     {
@@ -227,40 +230,23 @@ function checkSelection(e)
 
 function processContent()
 {
-    // Start the recursion from the body tag.
-    replaceText(document.body,{characterData: true});
+    if (settings.feature_annotations)
+        replaceText(document.body,{characterData: true});
+
     observer.observe(document.body, {
       childList: true,
       subtree: true
     });
-    
-    window.addEventListener('mouseup', checkSelection );
-}
-    
-function gotOptions(item)
-{
-    if (item)
-    {
-        var settings = item.settings;
-        if (settings)
-        {
-            local_zone_str_enabled = settings.local_zone_str_enabled;
-            time_format = settings.time_format;
-        }
-    }
-    processContent();
-}
 
-function optionsError(err)
-{
-    local_zone_str_enabled=true;
-    processContent();
+    window.addEventListener('mouseup', checkSelection );
 }
 
 function restoreOptions() 
 {
     browser.storage.local.get('settings')
-        .then(gotOptions,optionsError);
+        .then(gotOptions)
+        .then(processContent)
+        .catch(processContent);
 }
 
 function begin()

@@ -3,10 +3,13 @@ function saveOptions(e)
     var v = document.querySelector("#local_zone_str_checkbox").checked;
     var r = document.querySelector('input[name="time_format"]:checked');
     var tv = r ? r.value : "browser";
-
+    var f1 = document.querySelector("#feature_annotations_checkbox").checked;
+    var f2 = document.querySelector("#feature_tooltips_checkbox").checked;    
     var settings = {
         "local_zone_str_enabled": v,
-        "time_format": tv
+        "time_format": tv,
+        "feature_annotations": f1,
+        "feature_tooltips": f2
     };
     console.log("Saving Settings: "+JSON.stringify(settings));
     browser.storage.local.set({settings}).then(savedOption);
@@ -17,21 +20,19 @@ function savedOption()
     console.log("Settings Saved.");
 }
 
-function gotOptions(item)
+function updatePage(settings)
 {
-    if (item)
+    document.querySelector("#local_zone_str_checkbox").checked = settings.local_zone_str_enabled;
+    document.querySelector("#feature_annotations_checkbox").checked = settings.feature_annotations;
+    document.querySelector("#feature_tooltips_checkbox").checked = settings.feature_tooltips;
+    var node = document.querySelector('#time_format_'+settings.time_format);
+    if (node)
     {
-        var settings = item.settings;
-        if (settings)
-        {
-            console.log("Loaded Setting: "+JSON.stringify(settings));
-            document.querySelector("#local_zone_str_checkbox").checked = settings.local_zone_str_enabled;
-            var node = document.querySelector('#time_format_'+settings.time_format);
-            if (node)
-                node.checked = true;
-            else 
-                console.log("time_format setting not recognised: "+settings.time_format);
-        }
+        node.checked = true;
+    }
+    else 
+    {
+        console.log("time_format setting not recognised: "+settings.time_format);
     }
 }
 
@@ -60,13 +61,15 @@ function restoreOptions()
     }
     
     browser.storage.local.get('settings')
-        .then(gotOptions);
+        .then(gotOptions)
+        .then(updatePage);
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
-document.querySelector("#local_zone_str_checkbox").addEventListener("change", saveOptions);
-var radios = document.querySelectorAll('input[type=radio][name="time_format"]');
-radios.forEach(radio => radio.addEventListener('change', saveOptions));
+document.querySelectorAll('input[type=checkbox]')
+    .forEach(checkbox => checkbox.addEventListener('change', saveOptions));
+document.querySelectorAll('input[type=radio]')
+    .forEach(radio => radio.addEventListener('change', saveOptions));
 
 
 

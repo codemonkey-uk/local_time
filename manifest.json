@@ -2,10 +2,10 @@
     "manifest_version": 2,
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
-    "version": "0.4.1",
+    "version": "0.4.2",
     "icons": { 
         "128": "icon-128.png",
-        "512": "icon.svg"
+        "512": "icon-512.png"
     },
     "options_ui": {
       "page": "options.html",

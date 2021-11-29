@@ -1,3 +1,4 @@
+var annotations_local_enable = false;
 
 // Now monitor the DOM for additions and substitute emoji into new nodes.
 // @see https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver.
@@ -6,7 +7,7 @@ const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     if (childOfId(mutation.target,"local_time_popup")==false)
         updateSelection = true;
-    if (settings.feature_annotations)
+    if (settings.feature_annotations || annotations_local_enable)
     {
         if (mutation.addedNodes && mutation.addedNodes.length > 0) {
           // This DOM change was new nodes being added. Run our substitution
@@ -110,7 +111,11 @@ function begin()
     // listen for background script and trigger full replace 
     browser.runtime.onMessage.addListener(request => {
         if (request.greeting)
-            replaceAllText();
+        {
+            annotations_local_enable = !annotations_local_enable;
+            if (annotations_local_enable)
+                replaceAllText();
+        }
         return Promise.resolve({response: "background.js message received"});
     });
 }

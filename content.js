@@ -104,19 +104,35 @@ function restoreOptions()
         .catch(processContent);
 }
 
+function modeString(settings)
+{
+    if (settings.feature_annotations)
+        return "On Everywhere";
+    else if (annotations_local_enable)
+        return "On Temporarily";
+    else if (settings.feature_tooltips)
+        return "On for Selected Text";
+    else 
+        return "Off";
+}
+
 function begin()
 {
     restoreOptions();
     
     // listen for background script and trigger full replace 
     browser.runtime.onMessage.addListener(request => {
-        if (request.greeting)
+        if (request.greeting=="toggle")
         {
             annotations_local_enable = !annotations_local_enable;
-            if (annotations_local_enable)
-                replaceAllText();
         }
-        return Promise.resolve({response: "background.js message received"});
+        
+        if (annotations_local_enable)
+            replaceAllText();
+
+        return Promise.resolve({
+            response: modeString(settings)
+        });
     });
 }
 

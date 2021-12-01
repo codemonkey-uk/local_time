@@ -33,6 +33,11 @@ function onError(error)
     browser.browserAction.setTitle(
         {title :"Localise: Unresponsive, try reloading."}
     );
+    browser.browserAction.setIcon(
+        {path: statusIcon(0)}
+    ).catch(
+        ()=>{console.log("error setting error icon");}
+    );
 }
 
 function messageContentScript(tab_id, message)

@@ -10,7 +10,7 @@
     "browser_action": {
         "default_title": "Localise Timezones",
         "default_icon": {
-            "128": "icon-128.png"
+            "128": "button.png"
         }
     },
     "options_ui": {

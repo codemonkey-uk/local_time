@@ -2,7 +2,7 @@ NAME = local_time
 VERSION = 0_4_7
 BUILD_DIR = release
 BUILD_FILE = $(BUILD_DIR)/$(NAME)_$(VERSION).zip
-FILES = browser-polyfill.js core.js content.js background.js manifest.json LICENSE icon-512.png icon-128.png options.js options.html popup.css
+FILES = browser-polyfill.js core.js content.js background.js manifest.json LICENSE icon-512.png icon-128.png options.js options.html popup.css button*.png
 
 .DEFAULT_GOAL := build
 

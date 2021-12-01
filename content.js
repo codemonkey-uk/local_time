@@ -104,16 +104,16 @@ function restoreOptions()
         .catch(processContent);
 }
 
-function modeString(settings)
+function statusId(settings)
 {
     if (settings.feature_annotations)
-        return "On Everywhere";
+        return 1;
     else if (annotations_local_enable)
-        return "On Temporarily";
+        return 2;
     else if (settings.feature_tooltips)
-        return "On for Selected Text";
+        return 3;
     else 
-        return "Off";
+        return 4;
 }
 
 function begin()
@@ -131,7 +131,7 @@ function begin()
             replaceAllText();
 
         return Promise.resolve({
-            response: modeString(settings)
+            response: statusId(settings)
         });
     });
 }

@@ -29,25 +29,23 @@ function statusIcon(status)
 
 function onError(error) 
 {
-    console.log("error: "+JSON.stringify(error));
+    console.log("Error: "+JSON.stringify(error));
     browser.browserAction.setTitle(
         {title :"Localise: Unresponsive, try reloading."}
     );
     browser.browserAction.setIcon(
         {path: statusIcon(0)}
     ).catch(
-        ()=>{console.log("error setting error icon");}
+        ()=>{console.log("Error setting error icon");}
     );
 }
 
 function messageContentScript(tab_id, message)
 {
-    console.log("send '"+message+"' to "+JSON.stringify(tab_id));
     browser.tabs.sendMessage(
         tab_id,
         {greeting: message}
     ).then(response => {
-        console.log("received: "+JSON.stringify(response));
         browser.browserAction.setTitle(
             {title :"Localise: " + statusString(response.response)}
         );
@@ -58,16 +56,13 @@ function messageContentScript(tab_id, message)
 }
 
 browser.browserAction.onClicked.addListener((tab) => {
-    console.log("action: toggle");
     messageContentScript(tab.id, "toggle");
 });
 
 browser.tabs.onActivated.addListener((activeInfo) => {
-    console.log("changed tab");
     messageContentScript(activeInfo.tabId, "check");
 });
 
 browser.tabs.onUpdated.addListener((tabId) => {
-    console.log("updated tab");
     messageContentScript(tabId, "check");
 });

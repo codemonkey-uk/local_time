@@ -8,12 +8,27 @@ This add on put you in control. You decide how times from around the world appea
 
 2:30 pm UTC
 
+## Status Icons
+Most users prefer the Selected Text mode. For sites where text selection isnt possible, you can temporarly toggle Insert Everywhere on and off for the current tab using the browser action button. For at a glance reading the add on mode, the icons changes depending on its current mode of operation.
 
-## FireFox
+### Enabled for Insert Everywhere
+![button.png](button.png)
+### Enabled for Selected Text
+![button-partial.png](button-partial.png)
+### Temporarly Enabled for Insert Everywhere
+![button-temp.png](button-temp.png)
+### Turned Off or Not Working
+![button-grey.png](button-grey.png)
+
+## Availability 
+
+Localise Timezone can be installed from the release zip, and is available for free from the following browser add-ons managers.
+
+### FireFox
 
 https://addons.mozilla.org/en-US/firefox/addon/localise-timezones/
 
-## Chrome
+### Chrome
 
 https://chrome.google.com/webstore/detail/localise-timezones/opjfchgghhechkchondagenjpobfjooe
 

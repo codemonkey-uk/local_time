@@ -1,5 +1,5 @@
 NAME = local_time
-VERSION = 0_5
+VERSION = 0_5_1
 BUILD_DIR = release
 BUILD_FILE = $(BUILD_DIR)/$(NAME)_$(VERSION).zip
 FILES = browser-polyfill.js core.js content.js background.js manifest.json LICENSE icon-512.png icon-128.png options.js options.html popup.css button*.png

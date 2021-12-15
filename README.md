@@ -7,9 +7,11 @@ This add on put you in control. You decide how times from around the world appea
 ## Examples
 
 2:30 pm UTC
-12:00 am is midnight.
-1200 pm is noon
-1300 pm is invalid, but treat it as 1pm
+
+12:00 am GMT is midnight.
+
+1200 pm GMT is noon
+1300 pm GMT is invalid, but treat it as 1pm
 
 ## Status Icons
 Most users prefer the Selected Text mode. For sites where text selection isnt possible, you can temporarly toggle Insert Everywhere on and off for the current tab using the browser action button. For at a glance reading the add on mode, the icons changes depending on its current mode of operation.

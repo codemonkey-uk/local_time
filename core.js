@@ -279,9 +279,24 @@ function processText (text, fn)
         var minute = found[2] ? parseInt(found[2]) : 0;
         var second = found[3] ? parseInt(found[3]) : 0;
         
+        // check for AM/PM, add 12 to hours if PM is found
         var ampm = found[4];
-        if (ampm && ampm.toUpperCase().charAt()==="P")
-            hour += 12;
+        if (ampm)
+        {
+            if (ampm.toUpperCase().charAt()==="P")
+            {
+                // if hours 13+ the "PM" can be ignored, 
+                // the time is already 24h clock
+                if (hour<12)
+                    hour += 12;
+            }
+            else if (ampm.toUpperCase().charAt()==="A")
+            {
+                // 12 am is 00:00 (midnight) in 24h clock
+                if (hour==12)
+                    hours -= 12;
+            }
+        }
         
         var zone = found[5];
         if (utc_offsets[zone])

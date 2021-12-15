@@ -294,7 +294,7 @@ function processText (text, fn)
             {
                 // 12 am is 00:00 (midnight) in 24h clock
                 if (hour==12)
-                    hours -= 12;
+                    hour -= 12;
             }
         }
         

@@ -31,10 +31,10 @@ function statusIcon(status)
 function onError(error) 
 {
     console.log("Error: "+JSON.stringify(error));
-    browser.browserAction.setTitle(
+    browser.action.setTitle(
         {title :"Localise: Unresponsive, try reloading."}
     );
-    browser.browserAction.setIcon(
+    browser.action.setIcon(
         {path: statusIcon(0)}
     ).catch(
         ()=>{console.log("Error setting error icon");}
@@ -47,16 +47,16 @@ function messageContentScript(tab_id, message)
         tab_id,
         {greeting: message}
     ).then(response => {
-        browser.browserAction.setTitle(
+        browser.action.setTitle(
             {title :"Localise: " + statusString(response.response)}
         );
-        browser.browserAction.setIcon(
+        browser.action.setIcon(
             {tabId: tab_id, path: statusIcon(response.response)}
         ).catch(onError);
     }).catch(onError);
 }
 
-browser.browserAction.onClicked.addListener((tab) => {
+browser.action.onClicked.addListener((tab) => {
     messageContentScript(tab.id, "toggle");
 });
 

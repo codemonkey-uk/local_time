@@ -1,5 +1,9 @@
 # Localise Timezones
 
+## Single purpose
+
+Show times from anywhere in the world in the users local time.
+
 ## Description
 
 This add on put you in control. You decide how times from around the world appear on any website. This add on converts the time from any web site's text to your local time zone automatically. You have have it add the converted time in parenthesis after the original text, or show a pop when you select text. Either way you always see what was originally written, and can easily understand when events are going to happen.

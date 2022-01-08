@@ -1,4 +1,5 @@
 // background.js
+import './browser-polyfill.js';
 
 // this is just so we can trigger a full pass from the browser button
 // depends on polyfill for cross-browser compatibility

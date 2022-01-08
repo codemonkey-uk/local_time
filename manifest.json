@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Localise Timezones",
     "description": "Converts times to your local time zone",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "icons": { 
         "128": "icon-128.png",
         "512": "icon-512.png"
@@ -21,9 +21,8 @@
       "storage"
     ],
     "background": {
-        "scripts": [
-            "browser-polyfill.js", "background.js"
-        ]
+        "service_worker": "background.js",
+        "type": "module"
     },
     "content_scripts": [
         {

@@ -99,7 +99,7 @@
             "maxArgs": 2
           }
         },
-        "browserAction": {
+        "action": {
           "disable": {
             "minArgs": 0,
             "maxArgs": 1,

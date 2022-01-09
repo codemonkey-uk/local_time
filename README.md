@@ -1,5 +1,9 @@
 # Localise Timezones
 
+## Single purpose
+
+Show times from anywhere in the world in the users local time.
+
 ## Description
 
 This add on put you in control. You decide how times from around the world appear on any website. This add on converts the time from any web site's text to your local time zone automatically. You have have it add the converted time in parenthesis after the original text, or show a pop when you select text. Either way you always see what was originally written, and can easily understand when events are going to happen.
@@ -37,11 +41,21 @@ https://addons.mozilla.org/en-US/firefox/addon/localise-timezones/
 
 https://chrome.google.com/webstore/detail/localise-timezones/opjfchgghhechkchondagenjpobfjooe
 
-##  Privacy
+## Privacy
 
 Localise Timezones does not collect, transmit, or store any data. It only changes the content of websites in the browser as you view them.
 
-##  Copyright
+## Build Scripts
+
+Local Time release zips are created with zipnote. 
+
+The default zipnote on OS X zipnote is out of date. To install a newer version of zipnote use brew:
+> brew install zip
+
+And put it first on your path:
+> export PATH="/usr/local/opt/zip/bin:$PATH"
+
+## Copyright
 Mozilla Public License Version 2.0
 
 Icon by [Freepik](http://www.freepik.com/ "Freepik") from [www.flaticon.com](https://www.flaticon.com/ "Flaticon")

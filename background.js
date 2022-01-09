@@ -1,6 +1,11 @@
 // background.js
 import './browser-polyfill.js';
 
+// chrome / firefox compatibility 
+if (typeof browser.action === "undefined")
+    browser.action = browser.browserAction;
+
+
 // this is just so we can trigger a full pass from the browser button
 // depends on polyfill for cross-browser compatibility
 

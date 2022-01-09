@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "Localise Timezones",
+    "description": "Converts times to your local time zone",
+    "version": "0.5.3",
+    "icons": { 
+        "128": "icon-128.png",
+        "512": "icon-512.png"
+    },
+    "action": {
+        "default_title": "Localise Timezones",
+        "default_icon": {
+            "128": "button.png"
+        }
+    },
+    "options_ui": {
+      "page": "options.html"
+      
+    },
+    "permissions": [
+      "storage"
+    ],
+    "background": {
+        "service_worker": "background.js", "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "js": [
+                "browser-polyfill.js", "core.js", "content.js"
+            ],
+            "all_frames": true,
+            "run_at": "document_idle",
+            "css": ["popup.css"]
+        }
+    ]
+}

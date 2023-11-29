@@ -147,7 +147,6 @@ var utc_offsets = {
     "PMST": "-03",
     "PONT": "+11",
     "PST": "-08",
-    "PST": "+08",
     "PYST": "-03",
     "PYT": "-04",
     "RET": "+04",
